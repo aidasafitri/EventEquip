@@ -6,9 +6,7 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
-            <div class="inline-block bg-white rounded-full p-4 mb-4">
-                <span class="text-4xl">🎉</span>
-            </div>
+           
             <h1 class="text-4xl font-bold text-white mb-2">EventEquip</h1>
             <p class="text-blue-100">Sistem Peminjaman Alat Event</p>
         </div>
@@ -45,14 +43,7 @@
                 Login
             </button>
 
-            <div class="mt-4 p-4 bg-gray-100 rounded-lg text-sm text-gray-600">
-                <p class="font-semibold mb-2">Demo Login:</p>
-                <ul class="space-y-1">
-                    <li>📧 Admin: admin@example.com (pass: password)</li>
-                    <li>📧 Petugas: petugas@example.com (pass: password)</li>
-                    <li>📧 Peminjam: peminjam@example.com (pass: password)</li>
-                </ul>
-            </div>
+           
         </form>
 
         <p class="text-center text-blue-100 text-sm">

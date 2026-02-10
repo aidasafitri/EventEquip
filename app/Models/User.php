@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Role;
+use App\Models\Borrowing;
+use App\Models\ActivityLog;
 
 class User extends Authenticatable
 {
@@ -21,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -44,5 +48,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationships
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
+
+    public function approvedBorrowings()
+    {
+        return $this->hasMany(Borrowing::class, 'approved_by');
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    // Helper Methods
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isPetugas()
+    {
+        return $this->hasRole('petugas');
+    }
+
+    public function isPeminjam()
+    {
+        return $this->hasRole('peminjam');
     }
 }

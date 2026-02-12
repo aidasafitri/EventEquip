@@ -21,6 +21,12 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Registration for Peminjam only (public)
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [\App\Http\Controllers\Auth\PeminjamRegisterController::class, 'showRegistrationForm'])->name('register.show');
+    Route::post('/register', [\App\Http\Controllers\Auth\PeminjamRegisterController::class, 'register'])->name('register.perform');
+});
+
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 

@@ -23,7 +23,7 @@
                             <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Login</a>
+                       
                     @endauth
                 </div>
             </div>
@@ -34,7 +34,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center mb-16">
                 <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-4">EventEquip</h1>
-                <p class="text-xl md:text-2xl text-gray-700 mb-8">Sistem Manajemen Peminjaman Alat Event Terpadu</p>
+                <p class="text-xl md:text-2xl text-gray-700 mb-8">Sistem Manajemen Peminjaman Alat Event</p>
                 <p class="text-gray-600 text-lg mb-8">Kelola peminjaman alat event dengan mudah, cepat, dan efisien</p>
 
                 @auth
@@ -94,28 +94,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-12 text-center text-white">
-                <h2 class="text-3xl font-bold mb-4">Siap Memulai?</h2>
-                <p class="text-blue-100 mb-8">Kelola peminjaman alat event Anda dengan EventEquip sekarang juga</p>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition font-semibold">
-                        Buka Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition font-semibold">
-                        Login Sekarang
-                    </a>
-                @endauth
-            </div>
         </div>
     </div>
 
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>EventEquip © 2026 - Sistem Manajemen Peminjaman Alat Event</p>
-            <p class="text-gray-400 text-sm mt-2">Dibuat untuk memudahkan manajemen alat event</p>
-        </div>
-    </footer>
+    
 </body>
 </html>

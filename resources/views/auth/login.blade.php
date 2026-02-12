@@ -34,21 +34,18 @@
                 @enderror
             </div>
 
-            <div class="flex items-center">
-                <input type="checkbox" name="remember" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
-            </div>
+          
 
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium">
                 Login
             </button>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-600">Belum Punya Akun? <a href="{{ route('register.show') }}" class="font-semibold text-blue-600">Daftar</a></p>
+            </div>
 
-           
         </form>
 
-        <p class="text-center text-blue-100 text-sm">
-            EventEquip © 2026 - Sistem Manajemen Peminjaman Alat Event
-        </p>
+        
     </div>
 </div>
 @endsection

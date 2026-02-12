@@ -5,7 +5,7 @@
                 <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Admin Panel</h3>
                 <nav class="space-y-1">
                     <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 transition {{ request()->routeIs('dashboard') ? 'bg-blue-600' : '' }}">
-                        <span class="text-lg mr-3">📊</span>
+                        <span class="text-lg mr-3">📊 </span>
                         <span>Dashboard</span>
                     </a>
                     <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 transition {{ request()->routeIs('admin.users.*') ? 'bg-blue-600' : '' }}">

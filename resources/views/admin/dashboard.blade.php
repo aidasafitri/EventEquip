@@ -3,9 +3,9 @@
 @section('title', 'Dashboard Admin - EventEquip')
 
 @section('content')
-<div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Dashboard Admin</h1>
-    <p class="text-gray-600 mt-2">Selamat datang di dashboard admin EventEquip.</p>
+<div class="mb-8">
+    <h1 class="text-4xl font-bold text-slate-900">Dashboard Admin</h1>
+    <p class="text-slate-600 mt-2 text-lg">Selamat datang di dashboard admin EventEquip.</p>
 </div>
 @endsection
 

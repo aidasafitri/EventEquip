@@ -10,7 +10,7 @@ class Equipment extends Model
     use HasFactory;
 
     protected $table = 'equipments';
-    protected $fillable = ['category_id','name','code','qty_total','qty_available','condition','description'];
+    protected $fillable = ['category_id','name','code','qty_total','qty_available','condition','description','photo'];
 
     public function category()
     {
@@ -51,5 +51,27 @@ class Equipment extends Model
             'berat' => 100000.0,
             default => 0.0,
         };
+    }
+
+    /**
+     * Get photo URL
+     */
+    public function getPhotoUrl(): string
+    {
+        if ($this->photo) {
+            return asset('storage/equipments/' . $this->photo);
+        }
+        return asset('images/default-equipment.png');
+    }
+
+    /**
+     * Get photo path
+     */
+    public function getPhotoPath(): string
+    {
+        if ($this->photo) {
+            return 'storage/equipments/' . $this->photo;
+        }
+        return 'images/default-equipment.png';
     }
 }

@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\EquipmentDamagePrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EquipmentController extends Controller
 {
@@ -32,11 +34,21 @@ class EquipmentController extends Controller
             'qty_total' => 'required|integer|min:1',
             'condition' => 'required|in:baik,rusak ringan,rusak berat',
             'description' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Handle photo upload
+        $photoName = null;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = Str::uuid() . '.' . $photo->getClientOriginalExtension();
+            $photo->storeAs('equipments', $photoName, 'public');
+        }
 
         Equipment::create([
             ...$validated,
             'qty_available' => $validated['qty_total'],
+            'photo' => $photoName,
         ]);
 
         $this->logActivity(Auth::user(), "Membuat alat baru: {$validated['name']}");
@@ -60,10 +72,24 @@ class EquipmentController extends Controller
             'qty_total' => 'required|integer|min:1',
             'condition' => 'required|in:baik,rusak ringan,rusak berat',
             'description' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'damage_prices.ringan' => 'nullable|numeric|min:0',
             'damage_prices.sedang' => 'nullable|numeric|min:0',
             'damage_prices.berat' => 'nullable|numeric|min:0',
         ]);
+
+        // Handle photo upload
+        $photoName = $equipment->photo;
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($equipment->photo && Storage::disk('public')->exists('equipments/' . $equipment->photo)) {
+                Storage::disk('public')->delete('equipments/' . $equipment->photo);
+            }
+            
+            $photo = $request->file('photo');
+            $photoName = Str::uuid() . '.' . $photo->getClientOriginalExtension();
+            $photo->storeAs('equipments', $photoName, 'public');
+        }
 
         // Update equipment basic fields
         $equipment->update([
@@ -73,6 +99,7 @@ class EquipmentController extends Controller
             'qty_total' => $validated['qty_total'],
             'condition' => $validated['condition'],
             'description' => $validated['description'],
+            'photo' => $photoName,
         ]);
 
         // Update damage prices if provided
@@ -99,6 +126,11 @@ class EquipmentController extends Controller
 
     public function destroy(Equipment $equipment)
     {
+        // Delete photo if exists
+        if ($equipment->photo && Storage::disk('public')->exists('equipments/' . $equipment->photo)) {
+            Storage::disk('public')->delete('equipments/' . $equipment->photo);
+        }
+
         $this->logActivity(Auth::user(), "Menghapus alat: {$equipment->name}");
         $equipment->delete();
 

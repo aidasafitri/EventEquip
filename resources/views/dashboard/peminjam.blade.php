@@ -46,6 +46,46 @@
     </div>
 </div>
 
+<!-- Unpaid Fines Alert Section -->
+@if ($unpaidFines->count() > 0)
+<div class="mb-8 bg-red-50 border-2 border-red-300 rounded-lg p-6">
+    <div class="flex items-start">
+        <div class="flex-shrink-0">
+            <span class="text-3xl">⚠️</span>
+        </div>
+        <div class="ml-4 flex-1">
+            <h3 class="text-lg font-bold text-red-900">Perhatian: Ada Denda yang Belum Dibayar</h3>
+            <p class="text-red-800 mt-2">Anda memiliki <strong>{{ $unpaidFines->count() }} denda </strong> yang belum dibayar dari pengembalian alat yang rusak.</p>
+
+            <div class="mt-4 space-y-3">
+                @foreach ($unpaidFines as $borrowing)
+                <div class="bg-white rounded-lg p-4 border border-red-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-900">{{ $borrowing->equipment->name }}</p>
+                            <p class="text-sm text-gray-600">Kondisi: <span class="inline-flex px-2 py-1 text-xs font-semibold rounded bg-orange-100 text-orange-800">{{ $borrowing->borrowingReturn->getConditionLabel() }}</span></p>
+                            @if ($borrowing->borrowingReturn->notes)
+                            <p class="text-sm text-gray-600 mt-1">Catatan: {{ $borrowing->borrowingReturn->notes }}</p>
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold text-red-600">Rp {{ number_format($borrowing->getFineAmount(), 0, ',', '.') }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Denda yang harus dibayar</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <div class="mt-4 bg-red-100 border border-red-300 rounded-lg p-4">
+                <p class="text-red-900 font-semibold">Total Denda: <span class="text-2xl">Rp {{ number_format($totalUnpaidAmount, 0, ',', '.') }}</span></p>
+                <p class="text-sm text-red-700 mt-2">Segera lakukan pembayaran untuk melanjutkan peminjaman. Hubungi petugas untuk memproses pembayaran denda Anda.</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="grid grid-cols-1 gap-6">
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-6">Menu Peminjaman</h2>

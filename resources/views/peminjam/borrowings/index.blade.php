@@ -79,17 +79,6 @@
                                 <p class="text-sm text-gray-700">{{ $borrowing->note }}</p>
                             </div>
                         @endif
-
-                        <div class="flex gap-2">
-                            @if ($borrowing->status === 'approved')
-                                <form method="POST" action="{{ route('peminjam.borrowing.return', $borrowing->id) }}" class="inline" onsubmit="return confirm('Yakin alat sudah dikembalikan?');">
-                                    @csrf
-                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
-                                        Kembalikan Alat
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
                     </div>
                 </div>
             </div>

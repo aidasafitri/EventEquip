@@ -88,6 +88,50 @@
             @enderror
         </div>
 
+        <!-- Damage Prices Section -->
+        <div class="space-y-4 border-t pt-6">
+            <h3 class="text-lg font-semibold text-gray-900">Pengaturan Denda Kerusakan</h3>
+            <p class="text-sm text-gray-600">Atur harga denda untuk setiap tingkat kerusakan barang saat pengembalian</p>
+
+            <div class="grid grid-cols-3 gap-4">
+                @php
+                    $damageTypes = [
+                        'ringan' => 'Rusak Ringan',
+                        'sedang' => 'Rusak Sedang',
+                        'berat' => 'Rusak Berat'
+                    ];
+                    $damagePrices = $equipment->damagePrices->keyBy('damage_type')->toArray() ?? [];
+                @endphp
+
+                @foreach ($damageTypes as $typeKey => $typeLabel)
+                    <div>
+                        <label for="damage_prices_{{ $typeKey }}" class="block text-sm font-medium text-gray-700">
+                            {{ $typeLabel }}
+                        </label>
+                        <div class="mt-1 flex items-center">
+                            <span class="text-gray-500 mr-2">Rp</span>
+                            <input type="number"
+                                name="damage_prices[{{ $typeKey }}]"
+                                id="damage_prices_{{ $typeKey }}"
+                                value="{{ old('damage_prices.' . $typeKey, $damagePrices[$typeKey]['price'] ?? match($typeKey) {
+                                    'ringan' => 20000,
+                                    'sedang' => 50000,
+                                    'berat' => 100000,
+                                    default => 0
+                                }) }}"
+                                step="1000"
+                                min="0"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 @error('damage_prices.' . $typeKey) border-red-500 @enderror"
+                                placeholder="0">
+                        </div>
+                        @error('damage_prices.' . $typeKey)
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <div class="flex gap-4">
             <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium">
                 Simpan Perubahan

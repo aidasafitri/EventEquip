@@ -48,8 +48,8 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.borrowings.edit', $borrowing) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                            <form method="POST" action="{{ route('admin.borrowings.destroy', $borrowing) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus?');">
+                            <a href="{{ route('admin.borrowings.edit', $borrowing) }}" class="text-blue-600 hover:text-blue-900">Sunting</a>
+                            <form method="POST" action="{{ route('admin.borrowings.destroy', $borrowing) }}" class="inline confirm-delete" data-confirm-message="Yakin ingin menghapus data peminjaman ini? Tindakan ini tidak dapat dibatalkan.">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 ml-2">Hapus</button>

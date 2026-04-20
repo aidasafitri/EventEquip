@@ -51,10 +51,32 @@ class DashboardController extends Controller
     private function peminjamDashboard()
     {
         $user = Auth::user();
+
+        // Get borrowings dengan return info
+        $borrowings = $user->borrowings()
+            ->with(['equipment', 'borrowingReturn'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Calculate fine stats using foreach untuk safety
+        $unpaidFines = collect();
+        $totalUnpaidAmount = 0;
+
+        foreach ($borrowings as $borrowing) {
+            if ($borrowing->hasUnpaidFine()) {
+                $unpaidFines->push($borrowing);
+                $totalUnpaidAmount += $borrowing->getFineAmount();
+            }
+        }
+
         $data = [
-            'myBorrowings' => $user->borrowings()->count(),
-            'pending' => $user->borrowings()->where('status', 'pending')->count(),
-            'approved' => $user->borrowings()->where('status', 'approved')->count(),
+            'myBorrowings' => $borrowings->count(),
+            'pending' => $borrowings->where('status', 'pending')->count(),
+            'approved' => $borrowings->where('status', 'approved')->count(),
+            'returned' => $borrowings->where('status', 'returned')->count(),
+            'borrowings' => $borrowings,
+            'unpaidFines' => $unpaidFines,
+            'totalUnpaidAmount' => $totalUnpaidAmount,
         ];
 
         return view('dashboard.peminjam', $data);

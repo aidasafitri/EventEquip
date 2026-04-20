@@ -50,9 +50,9 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm fonts-medium space-x-2">
-                            <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                            <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900">Sunting</a>
                             @if ($user->id !== Auth::id())
-                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus user ini?');">
+                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline confirm-delete" data-confirm-message="Yakin ingin menghapus user ini? Tindakan ini tidak dapat dibatalkan.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>

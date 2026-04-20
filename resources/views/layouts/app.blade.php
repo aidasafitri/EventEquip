@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'EventEquip - Sistem Peminjaman Alat Event')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-50">
     @auth
@@ -24,7 +25,7 @@
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                                Logout
+                                Keluar
                             </button>
                         </form>
                     </div>
@@ -60,5 +61,36 @@
     @else
         @yield('content')
     @endauth
+
+    <!-- Modal Container - Positioned outside of scrollable elements -->
+    <div id="modalContainer"></div>
+    @include('petugas.borrowings.return-modal')
+
+    <script>
+        // Global handler untuk delete confirmation
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form.classList.contains('confirm-delete')) {
+                e.preventDefault();
+                const message = form.getAttribute('data-confirm-message') || 'Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.';
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Konfirmasi Hapus',
+                    text: message,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Tidak',
+                    reverseButtons: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

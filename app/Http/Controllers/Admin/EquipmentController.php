@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Equipment;
 use App\Models\Category;
+use App\Models\EquipmentDamagePrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +47,7 @@ class EquipmentController extends Controller
     public function edit(Equipment $equipment)
     {
         $categories = Category::all();
+        $equipment->load('damagePrices');
         return view('admin.equipments.edit', compact('equipment', 'categories'));
     }
 
@@ -58,9 +60,37 @@ class EquipmentController extends Controller
             'qty_total' => 'required|integer|min:1',
             'condition' => 'required|in:baik,rusak ringan,rusak berat',
             'description' => 'nullable|string',
+            'damage_prices.ringan' => 'nullable|numeric|min:0',
+            'damage_prices.sedang' => 'nullable|numeric|min:0',
+            'damage_prices.berat' => 'nullable|numeric|min:0',
         ]);
 
-        $equipment->update($validated);
+        // Update equipment basic fields
+        $equipment->update([
+            'category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'code' => $validated['code'],
+            'qty_total' => $validated['qty_total'],
+            'condition' => $validated['condition'],
+            'description' => $validated['description'],
+        ]);
+
+        // Update damage prices if provided
+        if (isset($validated['damage_prices'])) {
+            foreach ($validated['damage_prices'] as $damageType => $price) {
+                if ($price !== null && $price !== '') {
+                    EquipmentDamagePrice::updateOrCreate(
+                        [
+                            'equipment_id' => $equipment->id,
+                            'damage_type' => $damageType,
+                        ],
+                        [
+                            'price' => $price,
+                        ]
+                    );
+                }
+            }
+        }
 
         $this->logActivity(Auth::user(), "Mengubah data alat: {$equipment->name}");
 

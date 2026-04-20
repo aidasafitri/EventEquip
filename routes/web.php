@@ -32,6 +32,11 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin Home/Dashboard
+    Route::get('/', function () {
+        return view('admin.dashboard'); // Pastikan view ini ada
+    })->name('home');
+
     // Users
     Route::resource('users', AdminUserController::class);
 
@@ -54,6 +59,7 @@ Route::middleware(['auth', 'petugas'])->prefix('petugas')->name('petugas.')->gro
     Route::post('borrowings/{id}/approve', [PetugasBorrowingController::class, 'approve'])->name('borrowings.approve');
     Route::get('borrowings/monitoring', [PetugasBorrowingController::class, 'monitoringReturns'])->name('borrowings.monitoring');
     Route::post('borrowings/{id}/returned', [PetugasBorrowingController::class, 'markReturned'])->name('borrowings.returned');
+    Route::post('borrowings/{id}/fine/paid', [PetugasBorrowingController::class, 'markFinePaid'])->name('borrowings.fine.paid');
     Route::get('reports/borrowings', [PetugasBorrowingController::class, 'report'])->name('reports.borrowings');
 });
 
@@ -65,4 +71,3 @@ Route::middleware(['auth', 'peminjam'])->prefix('peminjam')->name('peminjam.')->
     Route::get('my-borrowings', [PeminjamBorrowingController::class, 'myBorrowings'])->name('borrowings.index');
     Route::post('return/{id}', [PeminjamBorrowingController::class, 'return'])->name('borrowing.return');
 });
-

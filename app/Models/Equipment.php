@@ -21,4 +21,35 @@ class Equipment extends Model
     {
         return $this->hasMany(Borrowing::class);
     }
+
+    /**
+     * Relationship: Equipment has many EquipmentDamagePrice
+     */
+    public function damagePrices()
+    {
+        return $this->hasMany(EquipmentDamagePrice::class);
+    }
+
+    /**
+     * Get damage price for a specific damage type
+     * Default prices: ringan=20000, sedang=50000, berat=100000
+     */
+    public function getDamagePrice(string $damageType): float
+    {
+        $damagePrice = $this->damagePrices()
+            ->where('damage_type', $damageType)
+            ->first();
+
+        if ($damagePrice) {
+            return (float) $damagePrice->price;
+        }
+
+        // Fallback to default prices if no custom price set
+        return match ($damageType) {
+            'ringan' => 20000.0,
+            'sedang' => 50000.0,
+            'berat' => 100000.0,
+            default => 0.0,
+        };
+    }
 }

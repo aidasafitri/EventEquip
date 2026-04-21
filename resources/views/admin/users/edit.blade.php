@@ -13,6 +13,7 @@
         @csrf
         @method('PUT')
 
+        {{-- Nama Lengkap --}}
         <div>
             <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
             <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
@@ -23,6 +24,7 @@
             @enderror
         </div>
 
+        {{-- Email --}}
         <div>
             <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
             <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required
@@ -33,6 +35,7 @@
             @enderror
         </div>
 
+        {{-- Nomor Telepon --}}
         <div>
             <label for="phone" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Telepon</label>
             <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
@@ -43,6 +46,7 @@
             @enderror
         </div>
 
+        {{-- Password (opsional) --}}
         <div>
             <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">Password (Kosongkan jika tidak ingin mengubah)</label>
             <input type="password" name="password" id="password"
@@ -54,6 +58,7 @@
             @enderror
         </div>
 
+        {{-- Konfirmasi Password --}}
         <div>
             <label for="password_confirmation" class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
             <input type="password" name="password_confirmation" id="password_confirmation"
@@ -62,6 +67,7 @@
             <p class="mt-2 text-xs text-red-600 font-medium hidden" id="passwordMismatch">⚠️ Password tidak sama!</p>
         </div>
 
+        {{-- Pilihan Role (Radio Button) --}}
         <div class="border-t border-slate-200 pt-6">
             <label class="block text-sm font-semibold text-slate-700 mb-4">Pilih Role <span class="text-red-500">*</span></label>
             <div class="space-y-3">
@@ -69,7 +75,7 @@
                     <div class="flex items-center p-3 rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer">
                         <input type="radio" name="role" value="{{ $role->id }}" id="role_{{ $role->id }}"
                             class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300"
-                            {{ $user->role_id == $role->id ? 'checked' : '' }}
+                            {{ $user->roles->contains($role->id) ? 'checked' : '' }}
                             required>
                         <label for="role_{{ $role->id }}" class="ml-3 block text-sm cursor-pointer flex-1">
                             <span class="font-semibold text-slate-900">{{ $role->label }}</span>
@@ -91,6 +97,7 @@
             @enderror
         </div>
 
+        {{-- Tombol Aksi --}}
         <div class="flex gap-4 pt-4">
             <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-semibold shadow-md hover:shadow-lg">
                 ✓ Simpan Perubahan
@@ -103,12 +110,14 @@
 </div>
 
 <script>
+    // Ambil elemen yang diperlukan
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('password_confirmation');
     const mismatchMessage = document.getElementById('passwordMismatch');
     const form = document.getElementById('editUserForm');
     const passwordHint = document.getElementById('passwordHint');
 
+    // Fungsi validasi kecocokan password (hanya jika password diisi)
     function validatePasswordMatch() {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
@@ -133,6 +142,7 @@
         }
     }
 
+    // Fungsi validasi panjang password (minimal 8 karakter)
     function validatePasswordLength() {
         const password = passwordInput.value;
         
@@ -160,6 +170,7 @@
         }
     }
 
+    // Reset validasi jika password dikosongkan
     function resetValidation() {
         if (passwordInput.value.length === 0) {
             confirmPasswordInput.classList.remove('border-red-500');
@@ -169,6 +180,7 @@
         }
     }
 
+    // Event listener
     passwordInput.addEventListener('input', function() {
         validatePasswordLength();
         validatePasswordMatch();
@@ -177,169 +189,12 @@
 
     confirmPasswordInput.addEventListener('input', validatePasswordMatch);
 
-    form.addEventListener('submit', function(e) {
-        const password = passwordInput.value;
-        
-        if (password.length > 0) {
-            if (password.length < 8) {
-                e.preventDefault();
-                alert('Password harus minimal 8 karakter!');
-                passwordInput.focus();
-                return false;
-            }
-            
-            if (password !== confirmPasswordInput.value) {
-                e.preventDefault();
-                alert('Password dan Konfirmasi Password tidak sama!');
-                confirmPasswordInput.focus();
-                return false;
-            }
-        }
-        
-        return true;
-    });
-
-    const deleteForm = document.querySelector('.confirm-delete');
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', function(e) {
-            const message = this.getAttribute('data-confirm-message') || 'Apakah Anda yakin?';
-            if (!confirm(message)) {
-                e.preventDefault();
-                return false;
-            }
-            return true;
-        });
-    }
-</script>
-
-<style>
-    input {
-        transition: all 0.3s ease;
-    }
-    
-    #passwordMismatch {
-        transition: all 0.3s ease;
-    }
-    
-    .bg-red-600:hover {
-        background-color: #dc2626;
-        transform: translateY(-1px);
-    }
-    
-    .bg-blue-600:hover {
-        transform: translateY(-1px);
-    }
-    
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-5px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    #passwordMismatch:not(.hidden) {
-        animation: fadeIn 0.3s ease;
-    }
-</style>
-@endsection
-
-<script>
-    // Ambil elemen yang diperlukan
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('password_confirmation');
-    const mismatchMessage = document.getElementById('passwordMismatch');
-    const form = document.getElementById('editUserForm');
-    const passwordHint = document.getElementById('passwordHint');
-
-    // Fungsi untuk validasi password match (hanya jika password diisi)
-    function validatePasswordMatch() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        
-        // Hanya validasi jika password tidak kosong
-        if (password.length > 0) {
-            if (password !== confirmPassword) {
-                // Tambahkan border merah
-                confirmPasswordInput.classList.add('border-red-500');
-                confirmPasswordInput.classList.remove('border-gray-300');
-                // Tampilkan pesan error
-                mismatchMessage.classList.remove('hidden');
-                return false;
-            } else {
-                // Hapus border merah
-                confirmPasswordInput.classList.remove('border-red-500');
-                confirmPasswordInput.classList.add('border-gray-300');
-                // Sembunyikan pesan error
-                mismatchMessage.classList.add('hidden');
-                return true;
-            }
-        } else {
-            // Jika password kosong, abaikan validasi konfirmasi
-            confirmPasswordInput.classList.remove('border-red-500');
-            confirmPasswordInput.classList.add('border-gray-300');
-            mismatchMessage.classList.add('hidden');
-            return true;
-        }
-    }
-
-    // Fungsi untuk validasi password length (minimal 8 karakter)
-    function validatePasswordLength() {
-        const password = passwordInput.value;
-        
-        if (password.length > 0 && password.length < 8) {
-            passwordInput.classList.add('border-red-500');
-            passwordInput.classList.remove('border-gray-300');
-            passwordHint.classList.remove('text-gray-500');
-            passwordHint.classList.add('text-red-500');
-            passwordHint.textContent = '⚠️ Password harus minimal 8 karakter!';
-            return false;
-        } else if (password.length >= 8) {
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-gray-300');
-            passwordHint.classList.remove('text-red-500');
-            passwordHint.classList.add('text-gray-500');
-            passwordHint.textContent = '✓ Password valid';
-            return true;
-        } else {
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-gray-300');
-            passwordHint.classList.remove('text-red-500');
-            passwordHint.classList.add('text-gray-500');
-            passwordHint.textContent = 'Biarkan kosong jika tidak ingin mengubah password';
-            return true;
-        }
-    }
-
-    // Fungsi untuk reset validasi saat password kosong
-    function resetValidation() {
-        if (passwordInput.value.length === 0) {
-            confirmPasswordInput.classList.remove('border-red-500');
-            confirmPasswordInput.classList.add('border-gray-300');
-            mismatchMessage.classList.add('hidden');
-            confirmPasswordInput.value = ''; // Kosongkan konfirmasi password
-        }
-    }
-
-    // Event listener untuk validasi real-time
-    passwordInput.addEventListener('input', function() {
-        validatePasswordLength();
-        validatePasswordMatch();
-        resetValidation();
-    });
-
-    confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-
-    // Validasi sebelum submit form
+    // Validasi sebelum submit
     form.addEventListener('submit', function(e) {
         const password = passwordInput.value;
         
         // Jika password diisi, lakukan validasi
         if (password.length > 0) {
-            // Cek apakah password minimal 8 karakter
             if (password.length < 8) {
                 e.preventDefault();
                 alert('Password harus minimal 8 karakter!');
@@ -347,7 +202,6 @@
                 return false;
             }
             
-            // Cek apakah password dan konfirmasi sama
             if (password !== confirmPasswordInput.value) {
                 e.preventDefault();
                 alert('Password dan Konfirmasi Password tidak sama!');
@@ -356,46 +210,35 @@
             }
         }
         
+        // Validasi role dipilih
+        const selectedRole = document.querySelector('input[name="role"]:checked');
+        if (!selectedRole) {
+            e.preventDefault();
+            alert('Silakan pilih role untuk user!');
+            return false;
+        }
+        
         return true;
     });
-
-    // Optional: Highlight tombol hapus dengan konfirmasi
-    const deleteForm = document.querySelector('.confirm-delete');
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', function(e) {
-            const message = this.getAttribute('data-confirm-message') || 'Apakah Anda yakin?';
-            if (!confirm(message)) {
-                e.preventDefault();
-                return false;
-            }
-            return true;
-        });
-    }
 </script>
 
 <style>
-    /* Animasi smooth untuk transisi border */
     input {
         transition: all 0.3s ease;
     }
     
-    /* Styling tambahan untuk pesan error */
     #passwordMismatch {
         transition: all 0.3s ease;
     }
     
-    /* Efek hover untuk tombol hapus */
-    .bg-red-600:hover {
-        background-color: #dc2626;
-        transform: translateY(-1px);
+    input[type="radio"] {
+        cursor: pointer;
     }
     
-    /* Efek untuk tombol simpan */
-    .bg-blue-600:hover {
-        transform: translateY(-1px);
+    input[type="radio"]:checked {
+        accent-color: #3b82f6;
     }
     
-    /* Animasi fade untuk pesan error */
     @keyframes fadeIn {
         from {
             opacity: 0;

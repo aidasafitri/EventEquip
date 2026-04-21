@@ -61,6 +61,7 @@
             <p class="mt-2 text-xs text-red-600 font-medium hidden" id="passwordMismatch">⚠️ Password tidak sama!</p>
         </div>
 
+        {{-- PERUBAHAN PENTING: name="role" bukan "roles" --}}
         <div class="border-t border-slate-200 pt-6">
             <label class="block text-sm font-semibold text-slate-700 mb-4">Pilih Role <span class="text-red-500">*</span></label>
             <div class="space-y-3">
@@ -177,6 +178,7 @@
             return false;
         }
         
+        // PERUBAHAN: selector untuk role (name="role")
         const selectedRole = document.querySelector('input[name="role"]:checked');
         if (!selectedRole) {
             e.preventDefault();
@@ -203,140 +205,6 @@
     
     input[type="radio"]:checked {
         accent-color: #3b82f6;
-    }
-</style>
-@endsection
-    </form>
-</div>
-
-<script>
-    // Ambil elemen yang diperlukan
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('password_confirmation');
-    const mismatchMessage = document.getElementById('passwordMismatch');
-    const form = document.getElementById('userForm');
-
-    // Fungsi untuk validasi password match
-    function validatePasswordMatch() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        
-        if (confirmPassword.length > 0 && password !== confirmPassword) {
-            // Tambahkan border merah
-            confirmPasswordInput.classList.add('border-red-500');
-            confirmPasswordInput.classList.remove('border-gray-300');
-            // Tampilkan pesan error
-            mismatchMessage.classList.remove('hidden');
-            return false;
-        } else {
-            // Hapus border merah
-            confirmPasswordInput.classList.remove('border-red-500');
-            confirmPasswordInput.classList.add('border-gray-300');
-            // Sembunyikan pesan error
-            mismatchMessage.classList.add('hidden');
-            return true;
-        }
-    }
-
-    // Fungsi untuk validasi password length (minimal 8 karakter)
-    function validatePasswordLength() {
-        const password = passwordInput.value;
-        const passwordHint = document.getElementById('passwordHint');
-        
-        if (password.length > 0 && password.length < 8) {
-            passwordInput.classList.add('border-red-500');
-            passwordInput.classList.remove('border-gray-300');
-            passwordHint.classList.remove('text-gray-500');
-            passwordHint.classList.add('text-red-500');
-            passwordHint.textContent = '⚠️ Password harus minimal 8 karakter!';
-            return false;
-        } else if (password.length >= 8) {
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-gray-300');
-            passwordHint.classList.remove('text-red-500');
-            passwordHint.classList.add('text-gray-500');
-            passwordHint.textContent = '✓ Password valid';
-            return true;
-        } else {
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-gray-300');
-            passwordHint.classList.remove('text-red-500');
-            passwordHint.classList.add('text-gray-500');
-            passwordHint.textContent = 'Minimal 8 karakter';
-            return true;
-        }
-    }
-
-    // Event listener untuk validasi real-time
-    passwordInput.addEventListener('input', function() {
-        validatePasswordLength();
-        validatePasswordMatch(); // Re-validasi konfirmasi jika password berubah
-    });
-
-    confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-
-    // Validasi sebelum submit form
-    form.addEventListener('submit', function(e) {
-        const isPasswordValid = validatePasswordLength();
-        const isMatchValid = validatePasswordMatch();
-        
-        // Cek apakah password minimal 8 karakter
-        if (passwordInput.value.length < 8) {
-            e.preventDefault();
-            alert('Password harus minimal 8 karakter!');
-            passwordInput.focus();
-            return false;
-        }
-        
-        // Cek apakah password dan konfirmasi sama
-        if (passwordInput.value !== confirmPasswordInput.value) {
-            e.preventDefault();
-            alert('Password dan Konfirmasi Password tidak sama!');
-            confirmPasswordInput.focus();
-            return false;
-        }
-        
-        // Cek apakah role dipilih
-        const selectedRole = document.querySelector('input[name="role"]:checked');
-        if (!selectedRole) {
-            e.preventDefault();
-            alert('Silakan pilih role untuk user!');
-            return false;
-        }
-        
-        return true;
-    });
-</script>
-
-<style>
-    /* Animasi smooth untuk transisi border */
-    input {
-        transition: all 0.3s ease;
-    }
-    
-    /* Styling tambahan untuk pesan error */
-    #passwordMismatch {
-        transition: all 0.3s ease;
-    }
-    
-    /* Styling untuk radio button */
-    input[type="radio"] {
-        cursor: pointer;
-    }
-    
-    input[type="radio"]:checked {
-        accent-color: #3b82f6;
-    }
-    
-    /* Efek hover pada role item */
-    .flex.items-center {
-        transition: all 0.2s ease;
-        padding: 8px;
-        border-radius: 8px;
-    }
-    
-    .flex.items-center:hover {
-        background-color: #f3f4f6;
     }
 </style>
 @endsection

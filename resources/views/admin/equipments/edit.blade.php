@@ -8,7 +8,7 @@
     <p class="text-slate-600 mt-2 text-lg">Ubah data alat event Anda</p>
 </div>
 
-<div class="bg-white rounded-xl shadow-lg p-8 max-w-2xl border border-slate-100">
+<div class="bg-white rounded-xl shadow-lg p-6 max-w-lg border border-slate-100">
     <form method="POST" action="{{ route('admin.equipments.update', $equipment) }}" class="space-y-7" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -157,7 +157,7 @@
                                 }) }}"
                                 step="1000"
                                 min="0"
-                                class="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white @error('damage_prices.' . $typeKey) border-red-500 @enderror"
+                                class="w-5 flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white @error('damage_prices.' . $typeKey) border-red-500 @enderror"
                                 placeholder="0">
                         </div>
                         @error('damage_prices.' . $typeKey)

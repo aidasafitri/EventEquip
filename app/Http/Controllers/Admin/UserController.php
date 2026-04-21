@@ -25,12 +25,13 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // PERUBAHAN: validasi 'role' bukan 'roles' sebagai array
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
-            'roles' => 'required|array',
+            'role' => 'required|exists:roles,id',  // ← kunci perbaikan
         ]);
 
         $user = User::create([
@@ -40,7 +41,8 @@ class UserController extends Controller
             'phone' => $validated['phone'] ?? null,
         ]);
 
-        $user->roles()->attach($validated['roles']);
+        // Attach role sebagai array satu elemen
+        $user->roles()->attach([$validated['role']]);
 
         $this->logActivity(Auth::user(), "Membuat user baru: {$user->name}");
 
@@ -60,7 +62,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'password' => 'nullable|min:8|confirmed',
-            'roles' => 'required|array',
+            'role' => 'required|exists:roles,id',  // perbaikan: role (tunggal)
         ]);
 
         $user->update([
@@ -69,11 +71,13 @@ class UserController extends Controller
             'phone' => $validated['phone'] ?? null,
         ]);
 
-        if ($validated['password'] ?? false) {
+        // Update password jika diisi
+        if (!empty($validated['password'])) {
             $user->update(['password' => Hash::make($validated['password'])]);
         }
 
-        $user->roles()->sync($validated['roles']);
+        // Sync role (many-to-many) dengan array satu elemen
+        $user->roles()->sync([$validated['role']]);
 
         $this->logActivity(Auth::user(), "Mengubah data user: {$user->name}");
 
